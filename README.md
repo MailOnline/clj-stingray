@@ -4,9 +4,28 @@ clj-stingray is a Clojure client for the [Riverbed Stingray Traffic Manager](htt
 
 At the moment clj-stingray implements a few basic APIs to access pools and enabled nodes in read-only mode. More support for advanced operation will come in the future.
 
+## How to use
+
+Add:
+
+        [clj-stingray "0.0.2"]
+
+to your project.clj. Here's an example snippet:
+
+```clojure
+    (ns your-prj
+      (:require [clj-stingray.core :as stingray]))
+
+    ; retrieve all pools
+    (stingray/pools)
+
+    ; retrieve pool data by name
+    (stingray/pool "yourpool")
+```
+
 ## Configuration
 
-clj-stingray integrates with leiningen environment map through [environ](https://github.com/weavejester/environ) for all local development needs. It also accepts overrides as environment properties or JVM properties for production environment.
+clj-stingray integrates with leiningen environment map through [environ](https://github.com/weavejester/environ) for all local development needs. It also accepts overrides as environment properties or JVM properties for production environment. Finally, it offers a programmatic way to override properties with a rebindable dynamic *env* var.
 
 ### development
 
@@ -41,23 +60,18 @@ Just make sure the same variables in profile.clj above are exported as shell env
 STINGRAY_HOST=https://stingrayhost STINGRAY_PORT=port-as-string STINGRAY_BASIC_AUTH_ENABLED?=true STINGRAY_BASIC_AUTH_USER=user STINGRAY_BASIC_AUTH_PWD=pwd STINGRAY_INSECURE?=true java -jar yourproject.jar
 ```
 
-## How to use
+### programmatic
 
-Add:
-
-        [clj-stingray "0.0.1"]
-
-to your project.clj. Here's an example snippet:
+If the configuration for your project is coming from other than the classpath, files or system environment (for example a db or zookeeper) you can fetch the variables and pass them down to clj-stingray as follow:
 
 ```clojure
     (ns your-prj
-      (:require [clj-stingray.core :as stingray]))
+      (:require [clj-stingray.core :as stingray]
+                [clj-stingray.config :refer [*env*]]))
 
-    ; retrieve all pools
-    (stingray/pools)
-
-    ; retrieve pool data by name
-    (stingray/pool "yourpool")
+    ; retrieve all pools using a custom config
+    (binding [*env* {}]
+      (stingray/pool "yourpool"))
 ```
 
 ## How to run the tests

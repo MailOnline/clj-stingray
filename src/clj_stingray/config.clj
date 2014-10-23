@@ -1,5 +1,10 @@
 (ns clj-stingray.config
-  (:require [environ.core :refer [env]]))
+  (:require [environ.core :as environ]))
+
+(def ^:dynamic *env* environ/env)
+
+(defn- env [key]
+  (*env* key))
 
 (defn with-basic-auth [opts]
   (if (env :stingray-basic-auth-enabled?)
