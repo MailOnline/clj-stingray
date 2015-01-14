@@ -3,10 +3,9 @@
             [clj-stingray.config :refer :all]))
 
 (def rest-sample-config
-  {:stingray {:host "host1"
-              :protocol :rest
-              :rest {:port "999"}
-              :soap {:port "888"}}})
+  {:stingray {:protocol :rest
+              :rest {:port "999" :host "host1"}
+              :soap {:port "888" :host "host2"}}})
 
 (facts "rebindable configuration"
        (fact "it should list all active pools"
@@ -16,4 +15,4 @@
 (facts "active protocol"
        (fact "config changes based on selected protocol"
              (binding [*env* (assoc-in rest-sample-config [:stingray :protocol] :soap)]
-               (url "endpoint") => "host1:888/endpoint")))
+               (url "endpoint") => "host2:888/endpoint")))
