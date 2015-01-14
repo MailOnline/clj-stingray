@@ -1,6 +1,6 @@
 # clj-stingray
 
-clj-stingray is a Clojure client for the [Riverbed Stingray Traffic Manager](http://www.riverbed.com) load-balancer application. The API version this client wraps is 3.2 which comes with Stingray Traffic Manager 9.8 release.
+clj-stingray is a Clojure client for the [Riverbed Stingray Traffic Manager](http://www.riverbed.com) load-balancer application. The API version this client wraps is 3.2 which comes with Stingray Traffic Manager 9.8 release. Both REST and SOAP protocols are supported.
 
 At the moment clj-stingray implements a few basic APIs to access pools and enabled nodes in read-only mode. More support for advanced operation will come in the future.
 
@@ -8,7 +8,7 @@ At the moment clj-stingray implements a few basic APIs to access pools and enabl
 
 Add:
 
-        [clj-stingray "0.0.2"]
+        [clj-stingray "0.1.0"]
 
 to your project.clj. Here's an example snippet:
 
@@ -25,7 +25,7 @@ to your project.clj. Here's an example snippet:
 
 ## Configuration
 
-clj-stingray integrates with leiningen environment map through [environ](https://github.com/weavejester/environ) for all local development needs. It also accepts overrides as environment properties or JVM properties for production environment. Finally, it offers a programmatic way to override properties with a rebindable dynamic *env* var.
+See the options below. clj-stingray integrates with leiningen environment map through [environ](https://github.com/weavejester/environ) for all local development needs. It also accepts overrides as environment properties or JVM properties for production environment. Finally, it offers a programmatic way to override properties with a rebindable dynamic *env* var.
 
 ### development
 
@@ -44,12 +44,18 @@ A file called sample_profiles.clj is provided to you in the main clj-stingray pr
 * Alternatively, the same variables can be added to ~/.lein/profiles.clj or the project.clj in your project:
 
 ```clojure
-:stingray-host "https://stingrayhost"   ; stingray host
-:stingray-port "port-as-string"         ; and port
-:stingray-basic-auth-enabled? true      ; or false
-:stingray-basic-auth-user "user"        ; if above is true
-:stingray-basic-auth-pwd "pwd"          ; if auth-enabled
-:stingray-insecure? true                ; don't check ssl server certificate
+:stingray {:host "https://thehost"
+           :protocol :rest ;or :soap
+           :rest {:port "port-as-string"
+                  :basic-auth-enabled? true
+                  :basic-auth-user "rest"
+                  :basic-auth-pwd "rest"
+                  :insecure? true}
+           :soap {:port "port-as-string"
+                  :basic-auth-enabled? true
+                  :basic-auth-user "soap"
+                  :basic-auth-pwd "soap"
+                  :insecure? true}}
 ```
 
 ### production
@@ -57,7 +63,7 @@ A file called sample_profiles.clj is provided to you in the main clj-stingray pr
 Just make sure the same variables in profile.clj above are exported as shell environment variables when your application is run, for example:
 
 ```bash
-STINGRAY_HOST=https://stingrayhost STINGRAY_PORT=port-as-string STINGRAY_BASIC_AUTH_ENABLED?=true STINGRAY_BASIC_AUTH_USER=user STINGRAY_BASIC_AUTH_PWD=pwd STINGRAY_INSECURE?=true java -jar yourproject.jar
+STINGRAY_HOST=https://stingrayhost STINGRAY_REST_PORT=port-as-string STINGRAY_REST_BASIC_AUTH_ENABLED?=true STINGRAY_REST_BASIC_AUTH_USER=user STINGRAY_REST_BASIC_AUTH_PWD=pwd STINGRAY_REST_INSECURE?=true java -jar yourproject.jar
 ```
 
 ### programmatic
@@ -73,6 +79,10 @@ If the configuration for your project is coming from other than the classpath, f
     (binding [*env* {}]
       (stingray/pool "yourpool"))
 ```
+
+## SOAP or REST
+
+Just change the :protocol key in configuration to switch between soap/rest protocols. The relevant section of the configuration will be used. No other changes are necessary.
 
 ## How to run the tests
 

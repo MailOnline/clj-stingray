@@ -1,6 +1,14 @@
-{:dev-cfg { :env {:stingray-host "https://stingrayhost"   ; stingray host
-                  :stingray-port "port-as-string"         ; and port
-                  :stingray-basic-auth-enabled? true      ; or false
-                  :stingray-basic-auth-user "user"        ; if above is true
-                  :stingray-basic-auth-pwd "pwd"          ; if auth-enabled
-                  :stingray-insecure? true}}}             ; don't check ssl server certificate
+{:dev-cfg
+ {:env
+  {:stingray {:host "https://thehost"
+              :protocol :rest ;or :soap
+              :rest {:port "port-as-string"
+                     :basic-auth-enabled? true
+                     :basic-auth-user "rest"
+                     :basic-auth-pwd "rest"
+                     :insecure? true}
+              :soap {:port "port-as-string"
+                     :basic-auth-enabled? true
+                     :basic-auth-user "soap"
+                     :basic-auth-pwd "soap"
+                     :insecure? true}}}}}

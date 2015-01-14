@@ -4,17 +4,24 @@
 (def ^:dynamic *env* environ/env)
 
 (defn- env [key]
-  (*env* key))
+  "Keys are the same by protocol used. So first getting
+  the protocol out, the using as a secondary key to extract the currently active one"
+  (let [protocol (:protocol (:stingray *env*))
+        config-by-protocol (protocol (:stingray *env*))]
+    (config-by-protocol key)))
 
 (defn with-basic-auth [opts]
-  (if (env :stingray-basic-auth-enabled?)
-    (assoc opts :basic-auth [(env :stingray-basic-auth-user) (env :stingray-basic-auth-pwd)])
+  (if (env :basic-auth-enabled?)
+    (assoc opts :basic-auth [(env :basic-auth-user) (env :basic-auth-pwd)])
     opts))
 
 (defn insecure? [opts]
-  (assoc opts :insecure? (env :stingray-insecure?)))
+  (assoc opts :insecure? (env :insecure?)))
 
 (defn url [endpoint]
-  (format "%s:%s/%s" (env :stingray-host) (env :stingray-port) endpoint))
+  (format "%s:%s/%s" ((:stingray *env*) :host) (env :port) endpoint))
+
+(def soap-url
+  (url "soap"))
 
 (def opts-default (-> {:as :json} (with-basic-auth) (insecure?)))
