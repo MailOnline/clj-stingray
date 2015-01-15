@@ -19,7 +19,7 @@
 (defn insecure? [opts]
   (assoc opts :insecure? (env :insecure?)))
 
-(defn url [endpoint]
-  (format "%s:%s/%s" (env :host) (env :port) endpoint))
+(defn url [service]
+  (format "%s:%s/%s/%s" (env :host) (env :port) (env :endpoint) service))
 
 (def opts-default (-> {:as :json} (with-basic-auth) (insecure?)))

@@ -11,7 +11,7 @@
 (defn see [x]
   (if (array? x) (map see x) x))
 
-(def soap-url (url "soap"))
+(def soap-url (.substring (url "") 0 (dec (count (url "")))))
 
 (defn- init []
   (Security/addProvider (MyProvider.))
@@ -49,6 +49,7 @@
 (defn disabled-nodes
   "Lists disabled nodes in a pool"
   [pool]
+  (println "### url" soap-url)
   (let [l (doto (PoolLocator.)
             (.setPoolPortEndpointAddress soap-url))
         pp (.getPoolPort l)

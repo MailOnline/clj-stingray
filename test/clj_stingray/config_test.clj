@@ -4,15 +4,15 @@
 
 (def rest-sample-config
   {:stingray {:protocol :rest
-              :rest {:port "999" :host "host1"}
-              :soap {:port "888" :host "host2"}}})
+              :rest {:port "111" :host "host1" :endpoint "api/1.1"}
+              :soap {:port "222" :host "host2" :endpoint "api/2.2"}}})
 
 (facts "rebindable configuration"
        (fact "it should list all active pools"
              (binding [*env* rest-sample-config]
-               (url "endpoint") => "host1:999/endpoint")))
+               (url "pools") => "host1:111/api/1.1/pools")))
 
 (facts "active protocol"
        (fact "config changes based on selected protocol"
              (binding [*env* (assoc-in rest-sample-config [:stingray :protocol] :soap)]
-               (url "endpoint") => "host2:888/endpoint")))
+               (url "pools") => "host2:222/api/2.2/pools")))
