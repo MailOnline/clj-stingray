@@ -1,7 +1,5 @@
-;; Courtesy of https://github.com/aterreno/soap-stings released under
-;; http://www.wtfpl.net/about/ license.
 (ns clj-stingray.soap
-  (:require [clj-stingray.config :refer [opts-default soap-url]])
+  (:require [clj-stingray.config :refer [opts-default url]])
   (:import com.zeus.soap.zxtm._1_0.VirtualServerLocator
            com.zeus.soap.zxtm._1_0.PoolLocator
            com.zeus.soap.zxtm._1_0.SystemLogLocator
@@ -12,6 +10,8 @@
 
 (defn see [x]
   (if (array? x) (map see x) x))
+
+(def soap-url (url "soap"))
 
 (defn- init []
   (Security/addProvider (MyProvider.))
@@ -46,6 +46,15 @@
         draining-nodes (.getDrainingNodes pp pool-names)]
     draining-nodes))
 
+(defn disabled-nodes
+  "Lists disabled nodes in a pool"
+  [pool]
+  (let [l (doto (PoolLocator.)
+            (.setPoolPortEndpointAddress soap-url))
+        pp (.getPoolPort l)
+        disabled-nodes (.getDisabledNodes pp (doto (make-array String 1) (aset 0 pool)))]
+    (see disabled-nodes)))
+
 (defn draining
   "Lists draining nodes from single node"
   [pool-name]
@@ -70,7 +79,6 @@
 (defn get-nodes
   "Gets the nodes from a pool. Usage: get-nodes pool"
   [pool]
-
   (let [l (doto (PoolLocator.)
             (.setPoolPortEndpointAddress soap-url))
         pp (.getPoolPort l)

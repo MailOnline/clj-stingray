@@ -91,5 +91,6 @@ Just change the :protocol key in configuration to switch between soap/rest proto
 
 ## TODO
 
+* extract rest of the URL into config
 * Travis-CI integration
 * CLI interface

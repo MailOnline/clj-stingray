@@ -22,7 +22,4 @@
 (defn url [endpoint]
   (format "%s:%s/%s" (env :host) (env :port) endpoint))
 
-(def soap-url
-  (url "soap"))
-
 (def opts-default (-> {:as :json} (with-basic-auth) (insecure?)))
