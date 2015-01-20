@@ -49,7 +49,6 @@
 (defn disabled-nodes
   "Lists disabled nodes in a pool"
   [pool]
-  (println "### url" soap-url)
   (let [l (doto (PoolLocator.)
             (.setPoolPortEndpointAddress soap-url))
         pp (.getPoolPort l)

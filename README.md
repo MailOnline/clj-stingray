@@ -27,6 +27,8 @@ to your project.clj. Here's an example snippet:
 
 See the options below. clj-stingray integrates with leiningen environment map through [environ](https://github.com/weavejester/environ) for all local development needs. It also accepts overrides as environment properties or JVM properties for production environment. Finally, it offers a programmatic way to override properties with a rebindable dynamic *env* var.
 
+If you pick "development" or "production" style below, you will need "lein-environ" dependencies in your project.clj :plugins section (lein-environ is responsible for reading environments).
+
 ### development
 
 A file called sample_profiles.clj is provided to you in the main clj-stingray project directory:
@@ -86,6 +88,15 @@ If the configuration for your project is coming from other than the classpath, f
 ## SOAP or REST
 
 Just change the :protocol key in configuration to switch between soap/rest protocols. The relevant section of the configuration will be used. No other changes are necessary.
+
+### Soapy things
+
+If you happen to incur in a "unable to find valid certification path to requested target" exception (because the target SOAP server is returning an untrusted certificate) do the following, replacing hostname:port with the target SOAP server hostname and port:
+
+```
+openssl x509 -in <(openssl s_client -connect hostname:port -prexit 2>/dev/null) -out ~/example.crt
+sudo keytool -importcert -file ~/example.crt -alias example -keystore $(/usr/libexec/java_home)/jre/lib/security/cacerts -storepass changeit
+```
 
 ## How to run the tests
 

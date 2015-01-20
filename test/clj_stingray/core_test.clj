@@ -36,4 +36,3 @@
 ; (require '[clj-stingray.core :as core])
 ; (import 'clj_stingray.core.StingraySoap)
 ; (core/enabled-nodes* (StingraySoap.) "and-hsk-smtpint app pool")
-;
