@@ -1,5 +1,5 @@
 (ns clj-stingray.soap
-  (:require [clj-stingray.config :refer [opts-default url]])
+  (:require [clj-stingray.config :refer [url]])
   (:import com.zeus.soap.zxtm._1_0.VirtualServerLocator
            com.zeus.soap.zxtm._1_0.PoolLocator
            com.zeus.soap.zxtm._1_0.SystemLogLocator
@@ -11,7 +11,7 @@
 (defn see [x]
   (if (array? x) (map see x) x))
 
-(def soap-url (.substring (url "") 0 (dec (count (url "")))))
+(defn soap-url [] (.substring (url "") 0 (dec (count (url "")))))
 
 (defn- init []
   (Security/addProvider (MyProvider.))
@@ -23,7 +23,7 @@
   "Lists virtual server names"
   []
   (let [l (doto (VirtualServerLocator.)
-            (.setVirtualServerPortEndpointAddress soap-url))
+            (.setVirtualServerPortEndpointAddress (soap-url)))
         vsp (.getVirtualServerPort l)
         vsnames (.getVirtualServerNames vsp)]
     (see vsnames)))
@@ -32,7 +32,7 @@
   "Lists pool names"
   []
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         pool-names (.getPoolNames pp)]
     (see pool-names)))
@@ -41,7 +41,7 @@
   "Lists draining nodes"
   [pool-names]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         draining-nodes (.getDrainingNodes pp pool-names)]
     draining-nodes))
@@ -50,7 +50,7 @@
   "Lists disabled nodes in a pool"
   [pool]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         disabled-nodes (.getDisabledNodes pp (doto (make-array String 1) (aset 0 pool)))]
     (see disabled-nodes)))
@@ -64,7 +64,7 @@
   "Adds nodes to the pool. Usage: add-node pool [nodes]"
   [pool nodes]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         pool-name (into-array String [pool])
         pool-nodes (into-array (map (partial into-array String) [nodes]))]
@@ -80,7 +80,7 @@
   "Gets the nodes from a pool. Usage: get-nodes pool"
   [pool]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         pool-name (into-array String [pool])]
     (see (.getNodes pp pool-name))))
@@ -89,7 +89,7 @@
   "Removes nodes from a pool. Usage: remove-nodes pool [nodes]"
   [pool nodes]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         pool-name (into-array String [pool])
         pool-nodes (into-array (map (partial into-array String) [nodes]))]
@@ -105,7 +105,7 @@
   "Drains nodes in a pool. Usage: drain-nodes pool [nodes]"
   [pool nodes]
   (let [l (doto (PoolLocator.)
-            (.setPoolPortEndpointAddress soap-url))
+            (.setPoolPortEndpointAddress (soap-url)))
         pp (.getPoolPort l)
         pool-name (into-array String [pool])
         pool-nodes (into-array (map (partial into-array String) [nodes]))]
@@ -121,7 +121,7 @@
   "Prints the error log"
   []
   (let [l (doto (SystemLogLocator.)
-            (.setSystemLogPortEndpointAddress soap-url))
+            (.setSystemLogPortEndpointAddress (soap-url)))
         slp (.getSystemLogPort l)
         error (.getErrorLogString slp)]
     error))

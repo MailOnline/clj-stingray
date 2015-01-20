@@ -22,4 +22,4 @@
 (defn url [service]
   (format "%s:%s/%s/%s" (env :host) (env :port) (env :endpoint) service))
 
-(def opts-default (-> {:as :json} (with-basic-auth) (insecure?)))
+(defn opts-default [] (-> {:as :json} (with-basic-auth) (insecure?)))

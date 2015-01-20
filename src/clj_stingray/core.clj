@@ -13,9 +13,9 @@
 (deftype StingrayRest []
   Stingray
   (pools* [this]
-    (get-in (client/get (url "api/tm/2.0/config/active/pools") opts-default) [:body :children]))
+    (get-in (client/get (url "api/tm/2.0/config/active/pools") (opts-default)) [:body :children]))
   (pool* [this name]
-    (get-in (client/get (url (str "api/tm/2.0/config/active/pools/" name)) opts-default) [:body :properties]))
+    (get-in (client/get (url (str "api/tm/2.0/config/active/pools/" name)) (opts-default)) [:body :properties]))
   (enabled-nodes* [this name]
     (let [pool (pool* this name)]
       (get-in pool [:basic :nodes])))

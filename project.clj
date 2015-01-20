@@ -1,4 +1,4 @@
-(defproject clj-stingray "0.1.0"
+(defproject clj-stingray "0.1.1"
   :description "Clojure client for Riverbed Stingray load balancer REST API"
   :dependencies [
                  [org.clojure/clojure "1.7.0-alpha5"]
