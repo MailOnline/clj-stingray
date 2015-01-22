@@ -8,7 +8,7 @@ At the moment clj-stingray implements a few basic APIs to access pools and enabl
 
 Add:
 
-        [clj-stingray "0.1.1"]
+        [clj-stingray "0.1.2"]
 
 to your project.clj. Here's an example snippet:
 
