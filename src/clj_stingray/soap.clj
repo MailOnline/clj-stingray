@@ -2,9 +2,7 @@
   (:require [clj-stingray.config :refer [url]])
   (:import com.zeus.soap.zxtm._1_0.VirtualServerLocator
            com.zeus.soap.zxtm._1_0.PoolLocator
-           com.zeus.soap.zxtm._1_0.SystemLogLocator
-           java.security.Security
-           MyProvider))
+           com.zeus.soap.zxtm._1_0.SystemLogLocator))
 
 (defn array? [x] (-> x class .isArray))
 
@@ -12,12 +10,6 @@
   (if (array? x) (map see x) x))
 
 (defn soap-url [] (.substring (url "") 0 (dec (count (url "")))))
-
-(defn- init []
-  (Security/addProvider (MyProvider.))
-  (Security/setProperty "ssl.TrustManagerFactory.algorithm", "TrustAllCertificates"))
-
-(init)
 
 (defn virtual-servers
   "Lists virtual server names"
